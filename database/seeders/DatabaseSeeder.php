@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
-            // MasterDataSeeder::class, akan ditambahkan ke dalam DatabaseSeeder.php pada tahap M3 setelah kelasnya dibuat
-            // Jadikan komentar sementara
+            MasterDataSeeder::class,
+
         ]);
     }
 }
