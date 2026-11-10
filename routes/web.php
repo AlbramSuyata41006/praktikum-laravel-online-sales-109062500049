@@ -1,20 +1,21 @@
 <?php
-
+use App\Http\Controllers\ProductCatalogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-
-// TAMBAHAN M3: Import Controller Stok dan Ekspedisi
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ShippingServiceController;
 
-// Route sementara agar tampilan navigasi tidak error
-Route::get('/', function () {
-    return view('layouts.app')->with('content', 'Halaman Katalog Produk (Akan dibangun di M4)');
-})->name('shop.index');
+
+Route::get('/', [ProductCatalogController::class, 'index'])->name('shop.index');
+Route::post('/keranjang/{product}', function () { return 'Fungsi tambah ke keranjang (M5)'; })->middleware(['auth', 'role:customer'])->name('cart.store');
+Route::get('/produk/{product:slug}', [ProductCatalogController::class, 'show'])->name('shop.show');
 Route::get('/keranjang', function () { return 'Halaman Keranjang'; })->middleware(['auth', 'role:customer'])->name('cart.index');
 Route::get('/pesanan', function () { return 'Halaman Pesanan'; })->middleware(['auth', 'role:customer'])->name('orders.index');
+
+
+
 
 // Group Route untuk Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
@@ -36,7 +37,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('/shipping/{shippingService}', [ShippingServiceController::class, 'update'])->name('shipping.update');
     Route::delete('/shipping/{shippingService}', [ShippingServiceController::class, 'destroy'])->name('shipping.destroy');
 
-   
+
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
@@ -53,3 +54,4 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
