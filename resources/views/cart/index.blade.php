@@ -55,7 +55,7 @@
 
     <div style="text-align:right; margin-top:20px">
         <a href="{{ route('shop.index') }}" class="btn btn-light">Lanjut Belanja</a>
-        <a href="#" class="btn" style="margin-left:10px">Lanjut Checkout (M6)</a>
+        <a href="{{ route('checkout.index') }}" class="btn" style="margin-left:10px">Lanjut Checkout</a>
     </div>
 @else
     <div class="card" style="text-align:center; padding:50px 20px">
