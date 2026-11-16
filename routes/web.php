@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\ProductCatalogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -9,10 +11,8 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ShippingServiceController;
 
-
 Route::get('/', [ProductCatalogController::class, 'index'])->name('shop.index');
 Route::get('/produk/{product:slug}', [ProductCatalogController::class, 'show'])->name('shop.show');
-
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
@@ -20,12 +20,15 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::put('/keranjang/{product}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/keranjang/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 
-    Route::get('/pesanan', function () { return 'Halaman Pesanan'; })->name('orders.index');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/pesanan', [CustomerOrderController::class, 'index'])->name('orders.index');
+    Route::get('/pesanan/{order}', [CustomerOrderController::class, 'show'])->name('orders.show');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', fn () => redirect()->route('admin.products.index'))->name('dashboard');
-
     Route::get('/orders', function () { return 'Halaman Transaksi (M7)'; })->name('orders.index');
 
     Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
