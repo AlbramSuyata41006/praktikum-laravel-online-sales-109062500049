@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ShippingServiceController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 Route::get('/', [ProductCatalogController::class, 'index'])->name('shop.index');
 Route::get('/produk/{product:slug}', [ProductCatalogController::class, 'show'])->name('shop.show');
@@ -28,8 +30,14 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/', fn () => redirect()->route('admin.products.index'))->name('dashboard');
-    Route::get('/orders', function () { return 'Halaman Transaksi (M7)'; })->name('orders.index');
+    
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/confirm', [AdminOrderController::class, 'confirm'])->name('orders.confirm');
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
+    Route::patch('/orders/{order}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
 
     Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
     Route::get('/stock/create', [StockController::class, 'create'])->name('stock.create');
