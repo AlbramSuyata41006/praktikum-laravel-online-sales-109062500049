@@ -30,7 +30,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    
+
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
